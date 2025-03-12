@@ -17,7 +17,7 @@ const ModalSelect = ({ openSelect = false, rows, setRows }) => {
     if (!Array.isArray(rows) || rows.length === 0) {
       setRows([{ codTextil: "", codProduct: "", texture: "", fornecedor: "" }]);
     }
-  }, []); // Array vazio faz com que rode apenas uma vez ao montar o componente
+  }, [rows, setRows]); // Array vazio faz com que rode apenas uma vez ao montar o componente
 
   const handleInputChange = (index, field, value) => {
     const updatedRows = [...rows];
