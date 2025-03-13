@@ -1220,7 +1220,8 @@ function Measure() {
           <footer className="_wrapper-div">
             <section className="_wrapper-divFooter">
               <div className="areaButton">
-                <button
+                {/* _____________________________________________________________________ */}
+                {/* <button
                   type="button"
                   onClick={(e) => {
                     e.preventDefault();
@@ -1235,8 +1236,62 @@ function Measure() {
                   }}
                 >
                   Enviar
-                </button>
+                </button> */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    console.log("Validando formulário...");
+                    if (!validateFields()) {
+                      console.log(
+                        "Validação falhou. Corrija os campos obrigatórios."
+                      );
+                      return;
+                    }
 
+                    // Defina os dados antes de usá-los
+                    const data = {
+                      cpf,
+                      description,
+                      rows: [],
+                      measurements: {
+                        colar,
+                        pala,
+                        manga,
+                        torax,
+                        cintura,
+                        quadril,
+                        cumprimento,
+                        biceps,
+                        antebraco,
+                        punhoEsquerdo,
+                        punhoDireito,
+                      },
+                      vendedor,
+                      deliveryDate,
+                      metersTissue,
+                      monograma,
+                      modelFish,
+                      typeFront,
+                      typeModel,
+                      extraRigido,
+                      barbatana,
+                      modelColar,
+                      typePense,
+                    };
+
+                    console.log(
+                      "Campos válidos! Preparando para enviar e-mail..."
+                    );
+                    console.log("Dados enviados:", data);
+
+                    setOpenMeasure(!openMeasure);
+                    console.log("Campo válido, continuando...");
+                  }}
+                >
+                  Enviar
+                </button>
+                ______________________________________________________________
                 <button type="button">Sair</button>
                 <button type="button">Limpar</button>
               </div>
