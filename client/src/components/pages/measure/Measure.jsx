@@ -272,7 +272,6 @@ function Measure() {
     }
 
     // Ações após passar todas as validações
-    console.log("Formulário enviado com sucesso!");
 
     console.log("Dados enviados:", data);
 
@@ -1229,10 +1228,6 @@ function Measure() {
                     if (!validateFields()) {
                       console.log(
                         "Validação falhou. Corrija os campos obrigatórios."
-                      );
-                      return;
-                      console.log(
-                        "Campos válidos! Preparando para enviar e-mail..."
                       );
                     }
                     setOpenMeasure(!openMeasure);
