@@ -11,6 +11,10 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(bodyParser.json());
 
+app.get("/", (req, res) => {
+  res.send("Servidor está rodando corretamente!");
+});
+
 // Rota para gerar e enviar o PDF por e-mail
 app.post("/send-pdf", async (req, res) => {
   try {

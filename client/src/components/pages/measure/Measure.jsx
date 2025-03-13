@@ -16,9 +16,11 @@ import Site from "../../AssetsIcons/logocotovia.jpeg";
 // import Modal from "../modalError/";
 import ModalSelect from "../modalSelect/Modal.select.jsx";
 import ModalMeasure from "../modalMeasure/Modal.measure.jsx";
+import Modal from "../modalError/Modal.error.jsx";
 
 import { jsPDF } from "jspdf";
-import { Button, Modal } from "@mui/material";
+import { Button } from "@mui/material";
+// import { Button, Modal } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import "../measure/Measure.css";
