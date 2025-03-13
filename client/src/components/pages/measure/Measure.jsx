@@ -1,26 +1,24 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 // import ReactDOM from "react-dom";
 import axios from "axios";
-// import { redirectDocument, useLocation } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-
+import { redirectDocument, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import ConstructionOutlined from "@mui/icons-material/ConstructionOutlined";
 
 import VMasker from "vanilla-masker";
 
-import Colarinho from "../../../components/AssetsIcons/typeColarinho.png";
+import Colarinho from "../../AssetsIcons/typeColarinho.png";
 import Duplo from "../../AssetsIcons/duplo.png";
 import Redondo from "../../AssetsIcons/redondo.png";
 import Chanfrado from "../../AssetsIcons/chanfrado.png";
 import Site from "../../AssetsIcons/logocotovia.jpeg";
 
-import ModalMeasure from "../modalMeasure/Modal.measure.jsx";
-// import Modal from "./modalError";
+// import Modal from "../modalError/";
 import ModalSelect from "../modalSelect/Modal.select.jsx";
+import ModalMeasure from "../modalMeasure/Modal.measure.jsx";
+
 import { jsPDF } from "jspdf";
-import { Button } from "@mui/material";
+import { Button, Modal } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import "../measure/Measure.css";
@@ -51,7 +49,6 @@ function Measure() {
   const [clearCumprimento, setClearCumprimento] = useState("");
   const [clearPunho, setClearPunho] = useState("");
   const [clearMetro, setClearMetro] = useState("");
-
   const [clearParis, setClearParis] = useState("");
   const [clearWindsor, setClearWindsor] = useState("");
   const [clearItaly, setClearItaly] = useState("");
@@ -272,6 +269,7 @@ function Measure() {
     }
 
     // Ações após passar todas as validações
+    console.log("Formulário enviado com sucesso!");
 
     console.log("Dados enviados:", data);
 
@@ -1220,8 +1218,7 @@ function Measure() {
           <footer className="_wrapper-div">
             <section className="_wrapper-divFooter">
               <div className="areaButton">
-                {/* _____________________________________________________________________ */}
-                {/* <button
+                <button
                   type="button"
                   onClick={(e) => {
                     e.preventDefault();
@@ -1236,62 +1233,8 @@ function Measure() {
                   }}
                 >
                   Enviar
-                </button> */}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    console.log("Validando formulário...");
-                    if (!validateFields()) {
-                      console.log(
-                        "Validação falhou. Corrija os campos obrigatórios."
-                      );
-                      return;
-                    }
-
-                    // Defina os dados antes de usá-los
-                    const data = {
-                      cpf,
-                      description,
-                      rows: [],
-                      measurements: {
-                        colar,
-                        pala,
-                        manga,
-                        torax,
-                        cintura,
-                        quadril,
-                        cumprimento,
-                        biceps,
-                        antebraco,
-                        punhoEsquerdo,
-                        punhoDireito,
-                      },
-                      vendedor,
-                      deliveryDate,
-                      metersTissue,
-                      monograma,
-                      modelFish,
-                      typeFront,
-                      typeModel,
-                      extraRigido,
-                      barbatana,
-                      modelColar,
-                      typePense,
-                    };
-
-                    console.log(
-                      "Campos válidos! Preparando para enviar e-mail..."
-                    );
-                    console.log("Dados enviados:", data);
-
-                    setOpenMeasure(!openMeasure);
-                    console.log("Campo válido, continuando...");
-                  }}
-                >
-                  Enviar
                 </button>
-                ______________________________________________________________
+
                 <button type="button">Sair</button>
                 <button type="button">Limpar</button>
               </div>
@@ -1347,7 +1290,7 @@ function Measure() {
           setRows={setRows}
         />
       </div>
-      {/* {showModal && <Modal message={errorMessage} closeModal={closeModal} />} */}
+      {showModal && <Modal message={errorMessage} closeModal={closeModal} />}
     </>
   );
 }

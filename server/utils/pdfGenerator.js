@@ -1,22 +1,22 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 const path = require("path");
+const handlebars = require("handlebars");
 
 async function generatePDF(data) {
+  // Adicionando console.log para verificar os dados recebidos
+  console.log("Dados recebidos para o PDF:", data); // 🔍 Verifique os dados
+
   const templatePath = path.join(__dirname, "template.html");
   let htmlTemplate = fs.readFileSync(templatePath, "utf8");
 
-  // Substituir os placeholders pelos dados reais
-  Object.keys(data).forEach((key) => {
-    htmlTemplate = htmlTemplate.replace(
-      new RegExp(`{{${key}}}`, "g"),
-      data[key]
-    );
-  });
+  // Compilando o template com Handlebars
+  const template = handlebars.compile(htmlTemplate);
+  const htmlFinal = template(data); // Compilando os dados no template
 
   // Criar um arquivo temporário do HTML
   const tempHtmlPath = path.join(__dirname, "temp.html");
-  fs.writeFileSync(tempHtmlPath, htmlTemplate);
+  fs.writeFileSync(tempHtmlPath, htmlFinal);
 
   // Iniciar o Puppeteer e gerar o PDF
   const browser = await puppeteer.launch({ headless: "new" });
