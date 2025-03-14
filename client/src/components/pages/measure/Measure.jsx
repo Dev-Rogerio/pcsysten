@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ConstructionOutlined from "@mui/icons-material/ConstructionOutlined";
@@ -108,6 +109,10 @@ function Measure() {
   const generateId = (currentId) => {
     return currentId + 1;
   };
+
+  useEffect(() => {
+    console.log(location);
+  }, [location]);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
