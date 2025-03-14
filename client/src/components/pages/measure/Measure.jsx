@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
-
 import axios from "axios";
-import { redirectDocument, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import ConstructionOutlined from "@mui/icons-material/ConstructionOutlined";
-
 import VMasker from "vanilla-masker";
 
 import Colarinho from "../../AssetsIcons/typeColarinho.png";
@@ -16,10 +13,6 @@ import Site from "../../AssetsIcons/logocotovia.jpeg";
 import ModalSelect from "../modalSelect/Modal.select.jsx";
 import ModalMeasure from "../modalMeasure/Modal.measure.jsx";
 import Modal from "../modalError/Modal.error.jsx";
-
-import { jsPDF } from "jspdf";
-import { Button } from "@mui/material";
-
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import "../measure/Measure.css";
@@ -33,12 +26,17 @@ function calculateDeliveryDate(date) {
 }
 function Measure() {
   const [cpf, setCpf] = useState("");
-  const [cliente, setCliente] = useState("");
-  const location = useLocation();
+  const [client, setClient] = useState("");
+  const [cliente, setCliente] = useState({});
+
   const [contato, setContato] = useState("");
   const [error, setError] = useState("");
   const [formNumber, setFormNumber] = useState(1);
   const [errorMessage, setErrorMessage] = useState("");
+  const [deliveryDate, setDeliveryDate] = useState("");
+  const [openMeasure, setOpenMeasure] = useState(false);
+  const [formData, setFormData] = useState({});
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [clearColar, setClearColar] = useState("");
   const [clearPala, setClearPala] = useState("");
@@ -58,12 +56,11 @@ function Measure() {
   const [selectedRadio, setSelectedRadio] = useState("");
   const [selectedPunhoRadio, setSelectedPunhoRadio] = useState("");
   const [selectedFrenteRadio, setSelectedFrenteRadio] = useState("");
-  const [client, setClient] = useState("");
-  const [formData, setFormData] = useState({ number: 1 });
-  const [lastNumber, setLastNumber] = useState(1);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const [lastNumber, setLastNumber] = useState(1);
   const [inputDate, setInputDate] = useState("");
-  const [openMeasure, setOpenMeasure] = useState(false);
   const [torax, setTorax] = useState("");
   const [colar, setColar] = useState("");
   const [pala, setPala] = useState("");
@@ -80,7 +77,6 @@ function Measure() {
   const [modelColar, setModelColar] = useState("");
   const [vendedor, setVendedor] = useState("");
   const [id, setId] = useState(1);
-  const [deliveryDate, setDeliveryDate] = useState("");
   const [metersTissue, setMetersTissue] = useState("");
   const [monograma, setMonograma] = useState("");
   const [modelFish, setModelFish] = useState("");
@@ -88,7 +84,6 @@ function Measure() {
   const [typePense, setTypePense] = useState("");
   const [typeModel, setTypeModel] = useState("");
   const [description, setDescription] = useState("");
-  const [showModal, setShowModal] = useState(false);
   const [erroMessage, setErroMessage] = useState("");
   const [select, setSelect] = useState("");
   const [openSelect, setOpenSelect] = useState(true);
@@ -104,6 +99,7 @@ function Measure() {
       fornecedor: "",
     },
   ]);
+  const [showModal, setShowModal] = useState(false);
   const [clearMonograma, setClearMonograma] = useState(false);
   const [localDescription, setLocalDescription] = useState("");
   const [clientCpf, setClientCpf] = useState("");
@@ -125,14 +121,26 @@ function Measure() {
     setDeliveryDate(calculateDeliveryDate(inputDate));
   }, [inputDate]);
 
-  useEffect(() => {
-    if (cpf) {
-      fetchClientData(cpf);
-    } else {
-      setCliente({});
-      setContato("");
+  const fetchClientData = async (cpf) => {
+    try {
+      const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000"; // Default to localhost for development
+
+      const response = await axios.get(`${apiUrl}/clienttable?cpf=${cpf}`);
+
+      if (response.data && response.data.length > 0) {
+        const clientData = response.data[0];
+        setCliente(clientData);
+        setContato(clientData.telefone || "");
+      } else {
+        setCliente({});
+        setContato("");
+      }
+    } catch (error) {
+      console.error("Erro ao buscar dados do cliente:", error);
+      setErrorMessage("Erro ao buscar dados do cliente");
     }
-  }, [cpf]);
+  };
+
   useEffect(() => {
     localStorage.setItem("ultimoLastNumber", lastNumber);
   }, [lastNumber]);
@@ -141,7 +149,6 @@ function Measure() {
     localStorage.setItem("formData", JSON.stringify(formData));
   }, [formData]);
 
-  // Adicionando useEffect para monitorar mudanças de estado
   useEffect(() => {
     console.log("openSelect mudou:", openSelect);
   }, [openSelect]);
@@ -151,7 +158,7 @@ function Measure() {
   }, [openMeasure]);
 
   const handleCpfMaskedChange = (e) => {
-    const rawValue = e.target.value.replace(/\D/g, ""); // Remove tudo que não for número
+    const rawValue = e.target.value.replace(/\D/g, "");
     const maskedValue = VMasker.toPattern(rawValue, "999.999.999-99");
     setCpf(maskedValue);
   };
@@ -197,33 +204,6 @@ function Measure() {
     return true;
   };
 
-  const fetchClientData = async (cpf) => {
-    try {
-      const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
-
-      if (!apiUrl) {
-        console.error("API URL não configurada!");
-        return;
-      }
-
-      const response = await axios.get(`${apiUrl}/clienttable?cpf=${cpf}`);
-
-      if (response.data && response.data.length > 0) {
-        const clientData = response.data[0];
-        setCliente(clientData);
-        setContato(clientData.telefone || "");
-      } else {
-        setCliente({});
-        setContato("");
-      }
-    } catch (error) {
-      console.error("Erro ao buscar dados do cliente:", error);
-      setError("Erro ao buscar dados do cliente");
-      setCliente({});
-      setContato("");
-    }
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -233,11 +213,10 @@ function Measure() {
       return;
     }
 
-    if (!isValidCPF(cpf)) {
-      console.error("CPF inválido");
+    if (!cpf.trim() || cpf.length !== 14) {
       setErrorMessage("O CPF inserido é inválido!");
       setShowModal(true);
-      return cpf.length === 14;
+      return;
     }
 
     if (!client.trim()) {
@@ -253,7 +232,7 @@ function Measure() {
     const data = {
       cpf,
       description,
-      rows: [],
+      rows,
       measurements: {
         colar,
         pala,
@@ -281,12 +260,12 @@ function Measure() {
     };
     console.log("Dados enviados:", data);
 
-    const API_URL =
-      process.env.NODE_ENV === "production"
-        ? "https://tales-cotovia.onrender.com"
-        : "http://localhost:5000";
-
     try {
+      const API_URL =
+        process.env.NODE_ENV === "production"
+          ? "https://tales-cotovia.onrender.com"
+          : "http://localhost:5000";
+
       const response = await fetch(`${API_URL}/send-email`, {
         method: "POST",
         headers: {
@@ -296,10 +275,6 @@ function Measure() {
       });
 
       const result = await response.json();
-      if (!response.ok) {
-        ConstructionOutlined.error("Erro ao enviar o email:", result);
-      }
-      console.log(result);
 
       if (result.success) {
         alert("E-mail enviado com sucesso!");
