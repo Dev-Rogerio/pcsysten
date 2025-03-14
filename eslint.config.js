@@ -1,7 +1,4 @@
-/** @type {import('eslint').Linter.Config} */
-module.exports = {
-  extends: ["eslint:recommended", "plugin:react/recommended"],
-  rules: {
-    "no-unused-vars": "off",
-  },
-};
+[build];
+base = "/opt/build/repo/client";
+command = "CI=false npm run build";
+publish = "/opt/build/repo/client/build";
