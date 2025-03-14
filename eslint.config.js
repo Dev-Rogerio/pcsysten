@@ -1,4 +1,6 @@
 [build];
-base = "/opt/build/repo/client";
-command = "CI=false npm run build";
-publish = "/opt/build/repo/client/build";
+base = "client";
+publish = "client/build";
+command = "CI=false npm run build"[functions];
+directory = "client/netlify/functions"[context.production.environment];
+NODE_ENV = "production";
