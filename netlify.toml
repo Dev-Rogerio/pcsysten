@@ -1,4 +1,4 @@
 [build]
-  base = "/opt/build/repo/pcsysten/pcsysten/client"
+  base = "pcsysten/pcsysten/client"
   command = "CI=false npm run build"
-  publish = "/opt/build/repo/pcsysten/pcsysten/client/build"
+  publish = "pcsysten/pcsysten/client/build"
