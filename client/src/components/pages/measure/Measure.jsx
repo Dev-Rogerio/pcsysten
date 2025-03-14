@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-// import ReactDOM from "react-dom";
+
 import axios from "axios";
 import { redirectDocument, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -13,14 +13,13 @@ import Redondo from "../../AssetsIcons/redondo.png";
 import Chanfrado from "../../AssetsIcons/chanfrado.png";
 import Site from "../../AssetsIcons/logocotovia.jpeg";
 
-// import Modal from "../modalError/";
 import ModalSelect from "../modalSelect/Modal.select.jsx";
 import ModalMeasure from "../modalMeasure/Modal.measure.jsx";
 import Modal from "../modalError/Modal.error.jsx";
 
 import { jsPDF } from "jspdf";
 import { Button } from "@mui/material";
-// import { Button, Modal } from "@mui/material";
+
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import "../measure/Measure.css";
@@ -33,7 +32,6 @@ function calculateDeliveryDate(date) {
   return currentDate.toLocaleDateString();
 }
 function Measure() {
-  const [dadosCliente, setDadosCliente] = useState(null);
   const [cpf, setCpf] = useState("");
   const [cliente, setCliente] = useState("");
   const location = useLocation();
@@ -199,30 +197,10 @@ function Measure() {
     return true;
   };
 
-  // ____________________________________________________________________________________________________________
-
-  // const TestConnection = () => {
-  //   useEffect(() => {
-  //     const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000"; // Usando a variável de ambiente
-
-  //     axios
-  //       .get(`${apiUrl}/`)
-  //       .then((response) => {
-  //         console.log("Resposta do servidor:", response.data);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Erro ao conectar com o servidor:", error);
-  //       });
-  //   }, []);
-
-  //   return <div>Testando conexão com o servidor...</div>;
-  // };
-
   const fetchClientData = async (cpf) => {
     try {
       const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
-      // Verifica se a URL da API foi corretamente configurada
       if (!apiUrl) {
         console.error("API URL não configurada!");
         return;
@@ -249,19 +227,17 @@ function Measure() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Validação do vendedor
     if (!vendedor.trim()) {
       setErrorMessage("O campo vendedor está vazio");
       setShowModal(true);
       return;
     }
 
-    // Validação do CPF
     if (!isValidCPF(cpf)) {
       console.error("CPF inválido");
       setErrorMessage("O CPF inserido é inválido!");
       setShowModal(true);
-      return; // Para a execução caso o CPF seja inválido
+      return cpf.length === 14;
     }
 
     if (!client.trim()) {
@@ -270,14 +246,13 @@ function Measure() {
       return;
     }
 
-    // Ações após passar todas as validações
     console.log("Formulário enviado com sucesso!");
 
     console.log("Dados enviados:", data);
 
     const data = {
       cpf,
-      description, // Suponho que você tenha uma variável 'description' no seu formulário
+      description,
       rows: [],
       measurements: {
         colar,
@@ -304,13 +279,13 @@ function Measure() {
       modelColar,
       typePense,
     };
+    console.log("Dados enviados:", data);
 
     const API_URL =
       process.env.NODE_ENV === "production"
         ? "https://tales-cotovia.onrender.com"
         : "http://localhost:5000";
 
-    // Enviar os dados para o servidor
     try {
       const response = await fetch(`${API_URL}/send-email`, {
         method: "POST",
@@ -324,7 +299,7 @@ function Measure() {
       if (!response.ok) {
         ConstructionOutlined.error("Erro ao enviar o email:", result);
       }
-      console.log(result); // Verifique a resposta do servidor no console
+      console.log(result);
 
       if (result.success) {
         alert("E-mail enviado com sucesso!");
@@ -336,7 +311,6 @@ function Measure() {
       alert("Ocorreu um erro ao enviar os dados. Tente novamente.");
     }
 
-    // Ações de fechamento do modal ou outras ações que você tenha
     setOpenMeasure(true);
     fetchClientData(cpf);
     setShowModal(false);
@@ -386,13 +360,13 @@ function Measure() {
   };
   const handleMeasureChamge = (e) => {
     const { name, value } = e.target;
-    // Remover caracteres não numéricos, exceto o ponto
+
     let sanitizedValue = value.replace(/[^0-9.]/g, "");
-    // Adicionar o ponto automaticamente após o primeiro número
+
     if (sanitizedValue.length > 2) {
       sanitizedValue = sanitizedValue.slice(0, 2);
     }
-    // Atualizar o estado com o valor sanitizado e formatado
+
     switch (name) {
       case "colar":
         setColar(sanitizedValue);
@@ -588,7 +562,7 @@ function Measure() {
       setShowModal(true);
       return false;
     }
-    setErrorMessage(""); // Limpa a mensagem de erro
+    setErrorMessage("");
     setShowModal(false);
     console.log("Todos os campos são válidos, continuando...");
     setOpenMeasure(!openMeasure);
@@ -599,16 +573,16 @@ function Measure() {
   console.log("ID antes de abrir o modal:", id);
   useEffect(() => {
     if (!id) {
-      setId(generateId()); // Gerar um id ou buscar de alguma API
+      setId(generateId());
     }
   }, [id]);
 
-  const [pdfFile, setPdfFile] = useState(null); // Estado para armazenar o arquivo
+  const [pdfFile, setPdfFile] = useState(null);
 
   const handleFileChange = (event) => {
-    const file = event.target.files[0]; // Obtém o primeiro arquivo selecionado
+    const file = event.target.files[0];
     console.log("Arquivo PDF anexado:", file);
-    setPdfFile(file); // Armazena o arquivo no estado
+    setPdfFile(file);
   };
 
   return (
