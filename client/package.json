@@ -23,8 +23,7 @@
     "start": "react-scripts start",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build": "react-scripts build && npm run move-build",
-    "move-build": "xcopy /E /I /H /Y client\\build\\* client\\"
+    "build": "react-scripts build"
   },
   "eslintConfig": {
     "extends": [
